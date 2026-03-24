@@ -1,6 +1,4 @@
-import { httpServerHandler } from 'cloudflare:node'; // 1. Tell Cloudflare to wrap this API
 const express = require('express');
-const http = require('node:http');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -21,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // CORS configuration
 const corsOptions = {
+    // Render will use the FRONTEND_URL you set in the dashboard
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
     optionsSuccessStatus: 200,
@@ -35,7 +34,7 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 // Root route
 app.get('/', (req, res) => {
     res.json({
-        message: 'PureLine API is running on Cloudflare Edge',
+        message: 'PureLine API is running on Render',
         version: '1.0.0',
         endpoints: {
             auth: '/api/auth',
@@ -54,7 +53,10 @@ app.get('/health', (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-// 2. We DELETE app.listen() because Cloudflare doesn't use ports.
-// 3. We EXPORT the app so Cloudflare knows how to trigger it on demand:
-const server = http.createServer(app);
-export default httpServerHandler(server);
+// --- RENDER/NODE.JS SERVER START ---
+// Render automatically assigns a port, but defaults to 10000
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
