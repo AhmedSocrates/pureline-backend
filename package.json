@@ -16,6 +16,9 @@
     ],
     "author": "PureLine",
     "license": "MIT",
+    "overrides": {
+        "iconv-lite": "0.6.3"
+    },
     "dependencies": {
         "@cloudflare/workers-types": "^4.20260317.1",
         "bcryptjs": "^2.4.3",
