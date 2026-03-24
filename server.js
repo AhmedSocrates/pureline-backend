@@ -1,3 +1,4 @@
+import { httpServerHandler } from 'cloudflare:node'; // 1. Tell Cloudflare to wrap this API
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -33,7 +34,7 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 // Root route
 app.get('/', (req, res) => {
     res.json({
-        message: 'PureLine API is running',
+        message: 'PureLine API is running on Cloudflare Edge',
         version: '1.0.0',
         endpoints: {
             auth: '/api/auth',
@@ -52,8 +53,6 @@ app.get('/health', (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(` Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+// 2. We DELETE app.listen() because Cloudflare doesn't use ports.
+// 3. We EXPORT the app so Cloudflare knows how to trigger it on demand:
+export default httpServerHandler(app);
