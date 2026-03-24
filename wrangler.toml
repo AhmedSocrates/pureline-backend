@@ -1,0 +1,8 @@
+name = "pureline-backend"
+main = "server.js"
+compatibility_date = "2026-03-18"
+compatibility_flags = [ "nodejs_compat" ]
+
+[vars]
+NODE_ENV = "production"
+# Note: We will add MONGO_URI and JWT_SECRET via the dashboard for security 
