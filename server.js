@@ -1,5 +1,6 @@
 import { httpServerHandler } from 'cloudflare:node'; // 1. Tell Cloudflare to wrap this API
 const express = require('express');
+const http = require('node:http');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -55,4 +56,5 @@ app.use(errorHandler);
 
 // 2. We DELETE app.listen() because Cloudflare doesn't use ports.
 // 3. We EXPORT the app so Cloudflare knows how to trigger it on demand:
-export default httpServerHandler(app);
+const server = http.createServer(app);
+export default httpServerHandler(server);
